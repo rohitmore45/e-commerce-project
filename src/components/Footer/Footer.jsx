@@ -5,10 +5,9 @@ import { FaTwitter } from "react-icons/fa";
 export default function Footer() {
   return (
     <footer className="bg-black text-white">
-      <div className=" container px-5 py-24 mx-auto flex md:items-center lg:items-start md:flex-row md:flex-nowrap flex-wrap flex-col">
+      <div className=" container px-5 py-20 mx-auto flex md:items-center lg:items-start md:flex-row md:flex-nowrap flex-wrap flex-col">
         <div className="w-64 md:mx-0 mx-auto text-center md:text-left">
           <h3 className="font-bold text-2xl">
-            {" "}
             Shop<span className="text-red-700">Now</span>
           </h3>
         </div>
