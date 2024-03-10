@@ -23,9 +23,12 @@ export default function Navbar() {
             <Link to="/">
               <li className="mr-5 hover:text-red-900 cursor-pointer">Home</li>
             </Link>
-            <li className="mr-5 hover:text-red-900 cursor-pointer">
-              All Products
-            </li>
+            <Link to="/allproducts">
+              <li className="mr-5 hover:text-red-900 cursor-pointer">
+                All Products
+              </li>
+            </Link>
+
             <li className="mr-5 hover:text-red-900 cursor-pointer">Mens</li>
             <li className="mr-5 hover:text-red-900 cursor-pointer">Kids</li>
           </ul>
@@ -52,9 +55,11 @@ export default function Navbar() {
         )}
 
         <div className="flex justify-center items-center gap-2">
-          <button className="bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200  rounded text-base  font-semibold">
-            Login
-          </button>
+          <Link to="/login">
+            <button className="bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200  rounded text-base  font-semibold">
+              Login
+            </button>
+          </Link>
           <Link to="/cart">
             <button>
               <FaCartShopping size={25} />
