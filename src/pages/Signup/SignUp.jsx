@@ -1,11 +1,10 @@
 import React from "react";
-import Layout from "../../components/Layout/Layout";
 import loginImg from "../../assets/Login/login.jpg";
 import { Link } from "react-router-dom";
 
 export default function SignUp() {
   return (
-    <Layout>
+    <>
       <div className="relative mt-6">
         <img
           src={loginImg}
@@ -69,6 +68,6 @@ export default function SignUp() {
           </p>
         </div>
       </div>
-    </Layout>
+    </>
   );
 }

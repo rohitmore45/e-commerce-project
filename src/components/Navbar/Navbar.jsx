@@ -4,7 +4,7 @@ import { FaCartShopping } from "react-icons/fa6";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { RxCross2 } from "react-icons/rx";
 
-export default function Navbar() {
+export default function Navbar({ cartData }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -64,7 +64,14 @@ export default function Navbar() {
             </button>
           </Link>
           <Link to="/cart">
-            <button>
+            <button className="relative">
+              <span
+                style={{ display: cartData.length == 0 ? "none" : "block" }}
+                className=" bg-red-600 rounded-xl px-1 py-0 font-semibold text-white text-xs absolute bottom-3 left-3 "
+              >
+                {cartData.length}
+              </span>
+
               <FaCartShopping size={25} />
             </button>
           </Link>
