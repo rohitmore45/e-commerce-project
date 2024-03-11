@@ -10,6 +10,10 @@ import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
 function App() {
   const [cartData, setCartData] = useState([]);
+  const [promoCode, setPromoCode] = useState("");
+  const [discount, setDiscount] = useState(0);
+  const [invalidCode, setInvalidCode] = useState("Invalid Promo Code!");
+  const [promoApplied, setPromoApplied] = useState('')
 
   // addtocart function
   const handleAddToCart = (product) => {
@@ -50,6 +54,29 @@ function App() {
     setCartData(filteredItems);
   };
 
+  //totalProductPrice function
+  const getTotalPrice = () => {
+    const totalPrice = cartData.reduce((total, item) => {
+      return total + item.price * item.quantity;
+    }, 0);
+
+    return totalPrice - discount;
+    f;
+  };
+
+  //promo code functions
+
+  const applyPromoCode = () => {
+    if (promoCode === "DISCOUNT10") {
+      setDiscount(getTotalPrice() * 0.1);
+      setPromoCode("");
+      setInvalidCode("")
+      setPromoApplied('Code Applied Successfully !!')
+    } else {
+      setInvalidCode(invalidCode);
+    }
+  };
+
   return (
     <>
       <div>
@@ -66,6 +93,12 @@ function App() {
                   handleQuantityDecrease={handleQuantityDecrease}
                   handleQuantityIncrease={handleQuantityIncrease}
                   handleRemoveItem={handleRemoveItem}
+                  getTotalPrice={getTotalPrice}
+                  applyPromoCode={applyPromoCode}
+                  promoCode={promoCode}
+                  setPromoCode={setPromoCode}
+                  invalidCode={invalidCode}
+                  promoApplied={promoApplied}
                 />
               }
             />
