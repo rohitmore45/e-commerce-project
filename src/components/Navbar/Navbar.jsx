@@ -39,9 +39,12 @@ export default function Navbar() {
               <Link to="/">
                 <li className="mr-5 hover:text-red-900 cursor-pointer">Home</li>
               </Link>
-              <li className="mr-5 hover:text-red-900 cursor-pointer">
-                All Products
-              </li>
+              <Link to="/allproducts">
+                <li className="mr-5 hover:text-red-900 cursor-pointer">
+                  All Products
+                </li>
+              </Link>
+
               <li className="mr-5 hover:text-red-900 cursor-pointer">Mens</li>
               <li className="mr-5 hover:text-red-900 cursor-pointer">Kids</li>
             </ul>
