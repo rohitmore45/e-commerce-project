@@ -9,15 +9,13 @@ import { useEffect, useState } from "react";
 import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
 import { Toaster } from "react-hot-toast";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "./FirebaseAuth/FirebaseAuth";
+
 function App() {
   const [cartData, setCartData] = useState([]);
   const [promoCode, setPromoCode] = useState("");
   const [discount, setDiscount] = useState(0);
   const [invalidCode, setInvalidCode] = useState("Invalid Promo Code!");
   const [promoApplied, setPromoApplied] = useState("");
-  const [userName, setUserName] = useState("");
 
   // addtocart function
   const handleAddToCart = (product) => {
@@ -80,22 +78,11 @@ function App() {
     }
   };
 
-  //display username
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUserName(user.displayName);
-      } else {
-        setUserName("");
-      }
-    });
-  }, [userName]);
-
   return (
     <>
       <div>
         <BrowserRouter>
-          <Navbar cartData={cartData} userName={userName} />
+          <Navbar cartData={cartData} />
           <Routes>
             <Route exact path="/" element={<Home />} />
             <Route

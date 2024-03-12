@@ -1,11 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FaCartShopping } from "react-icons/fa6";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { RxCross2 } from "react-icons/rx";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../../FirebaseAuth/FirebaseAuth";
 
-export default function Navbar({ cartData, userName }) {
+export default function Navbar({ cartData }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [userName, setUserName] = useState("");
+
+  //display username
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserName(user.displayName);
+      } else {
+        setUserName("");
+      }
+    });
+  }, []);
 
   return (
     <header className="bg-white border-b border-gray-200 relative">
@@ -58,7 +72,7 @@ export default function Navbar({ cartData, userName }) {
         )}
 
         <div className="flex justify-center items-center gap-2">
-          <span>{userName}</span>
+          {userName && <span>{userName}</span>}
           <Link to="/login">
             <button className="bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200  rounded text-base  font-semibold">
               Login

@@ -1,67 +1,97 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import allProducts from "../../assets/allProducts.jpg";
+import productsImg from "../../assets/allProducts.jpg";
 
 export default function AllProducts({ handleAddToCart }) {
+  const [allProducts, setAllProducts] = useState([]);
+  const [originalProducts, setOriginalProducts] = useState([]);
   const [allCategory, setAllCategory] = useState([]);
-  const [products, setProducts] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("All");
 
-  //product categories
+  const [selectProducts, setSelectProducts] = useState("");
+  const [userSearchText, setUserSearchText] = useState("");
+
+  const [searchItem, setSearchItem] = useState("");
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
+
+  //all products
   useEffect(() => {
-    const getAllProductsCategories = async () => {
+    const getAllProducts = async () => {
       try {
-        const res = await axios.get(
-          "https://dummyjson.com/products/categories"
-        );
-        res.data.unshift("All");
-        // console.log(res.data)
-        setAllCategory(res.data);
+        const res = await axios("https://dummyjson.com/products");
+        setAllProducts(res.data.products);
+        setOriginalProducts(res.data.products);
       } catch (error) {
         console.log(error);
       }
     };
-    getAllProductsCategories();
+    getAllProducts();
   }, []);
 
+  // products category
+  useEffect(() => {
+    const getCategoryProducts = async () => {
+      try {
+        const res = await axios(`https://dummyjson.com/products/categories`);
+        setAllCategory(res.data);
+        // console.log(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getCategoryProducts();
+  }, []);
+
+  //handle category change
   const handleCategoryChange = (e) => {
-    setSelectedCategory(e.target.value);
+    console.log(e.target.value);
+    setSelectProducts(e.target.value);
   };
 
-  const getAllProducts = async () => {
+  // filter products
+  const filterProducts = async () => {
     try {
-      const res = await axios("https://dummyjson.com/products");
-      setProducts(res.data.products);
-      // console.log(res.data.products);
+      const res =
+        selectProducts !== "" &&
+        (await axios(
+          `https://dummyjson.com/products/category/${selectProducts}`
+        ));
+      setAllProducts(res.data.products);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const getCategoryProducts = async () => {
-    if (selectedCategory === "All") {
-      getAllProducts();
-    } else {
-      try {
-        const res = await axios(
-          `https://dummyjson.com/products/category/${selectedCategory}`
-        );
-        setProducts(res.data.products);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  };
-
   useEffect(() => {
-    getCategoryProducts();
-  }, [selectedCategory]);
+    filterProducts();
+  }, [selectProducts]);
 
+  //search button function
+  const handleSearchByButton = () => {
+    const searchProducts = originalProducts.filter((item) =>
+      item.title.toLowerCase().includes(userSearchText.toLocaleLowerCase())
+    );
+    setAllProducts(searchProducts);
+  };
+  useEffect(() => {
+    !userSearchText && setAllProducts(originalProducts);
+  }, [userSearchText]);
+
+  //price sorting
+  const handlePriceSort = () => {
+    let min = parseInt(minPrice);
+    let max = parseInt(maxPrice);
+
+    const sortedProducts = originalProducts.filter((item) => {
+      return (!min || item.price >= min) && (!max || item.price <= max);
+    });
+    setAllProducts(sortedProducts);
+  };
   return (
     <>
       <div className="relative mt-6 ">
         <img
-          src={allProducts}
+          src={productsImg}
           alt="Img"
           className="object-cover object-center w-full h-[300px]"
         />
@@ -70,6 +100,7 @@ export default function AllProducts({ handleAddToCart }) {
           All Products
         </h2>
       </div>
+
       <div className=" flex w-full flex-col gap-y-10 mb-10">
         <div className="mx-auto mt-5">
           <select
@@ -87,8 +118,48 @@ export default function AllProducts({ handleAddToCart }) {
           </select>
         </div>
 
+        {/* search Products */}
+        <div className="flex items-center justify-center">
+          <input
+            type="text"
+            placeholder="Search products"
+            className="border-2 py-1 px-2 rounded-md text-sm md:text-xl"
+            onChange={(e) => setUserSearchText(e.target.value)}
+            value={userSearchText}
+          />
+          <button
+            className=" bg-indigo-500 px-3 py-1 md:py-2 rounded-md ml-2 font-semibold"
+            onClick={handleSearchByButton}
+          >
+            Search
+          </button>
+        </div>
+
+        {/* sort products */}
+        <div className="flex items-center justify-center gap-2">
+          <input
+            type="text"
+            placeholder="min-price"
+            className="border-2 py-1 px-2 w-[150px] rounded-md text-sm md:text-xl "
+            onChange={(e) => setMinPrice(e.target.value)}
+            value={minPrice}
+          />
+          <input
+            type="text"
+            placeholder="max-price"
+            className="border-2 py-1 px-2 w-[150px] rounded-md text-sm md:text-xl "
+            onChange={(e) => setMaxPrice(e.target.value)}
+            value={maxPrice}
+          />
+          <button
+            className=" bg-indigo-500 px-3 py-1 md:py-2 rounded-md ml-2 font-semibold"
+            onClick={handlePriceSort}
+          >
+            Search
+          </button>
+        </div>
         <div className="flex flex-wrap justify-center sm:-m-4  -mt-4  gap-3  ">
-          {products.map((item) => {
+          {allProducts.map((item) => {
             return (
               <div
                 className="md:w-1/4 sm:mb-0 mb-6 border-2 rounded-lg p-2 m-2 shadow-md"
