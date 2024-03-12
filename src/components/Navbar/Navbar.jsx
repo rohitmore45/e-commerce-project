@@ -4,7 +4,7 @@ import { FaCartShopping } from "react-icons/fa6";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { RxCross2 } from "react-icons/rx";
 
-export default function Navbar({ cartData }) {
+export default function Navbar({ cartData, userName }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -58,6 +58,7 @@ export default function Navbar({ cartData }) {
         )}
 
         <div className="flex justify-center items-center gap-2">
+          <span>{userName}</span>
           <Link to="/login">
             <button className="bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200  rounded text-base  font-semibold">
               Login

@@ -1,7 +1,38 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
 import loginImg from "../../assets/Login/login.jpg";
+import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../FirebaseAuth/FirebaseAuth";
+
 export default function Login() {
+  const [userLogin, setUserLogin] = useState({
+    email: "",
+    password: "",
+  });
+
+  const navigateHome = useNavigate();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setUserLogin({ ...userLogin, [name]: value });
+  };
+
+  //handle Login function
+  const handleLogin = (e) => {
+    e.preventDefault();
+    if (!userLogin.email || !userLogin.password) {
+      return toast.error("All field required !!");
+    } else {
+      signInWithEmailAndPassword(auth, userLogin.email, userLogin.password)
+        .then(() => {
+          navigateHome("/");
+          toast.success("Logged In Successfully!");
+        })
+        .catch((err) => toast.error(err.message));
+    }
+  };
+
   return (
     <>
       <>
@@ -35,7 +66,10 @@ export default function Login() {
                   type="email"
                   id="email"
                   name="email"
+                  value={userLogin.email}
+                  autoComplete="off"
                   className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                  onChange={handleChange}
                 />
               </div>
               <div className="relative mb-4">
@@ -49,10 +83,16 @@ export default function Login() {
                   type="password"
                   id="password"
                   name="password"
+                  value={userLogin.password}
+                  autoComplete="off"
                   className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                  onChange={handleChange}
                 />
               </div>
-              <button className="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg">
+              <button
+                className="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg"
+                onClick={handleLogin}
+              >
                 Login
               </button>
               <p className="text-xs text-gray-500 mt-3">

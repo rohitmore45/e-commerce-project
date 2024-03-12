@@ -5,15 +5,19 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AllProducts from "./components/AllProducts/AllProducts";
 import Login from "./pages/Login/Login";
 import SignUp from "./pages/Signup/SignUp";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
+import { Toaster } from "react-hot-toast";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "./FirebaseAuth/FirebaseAuth";
 function App() {
   const [cartData, setCartData] = useState([]);
   const [promoCode, setPromoCode] = useState("");
   const [discount, setDiscount] = useState(0);
   const [invalidCode, setInvalidCode] = useState("Invalid Promo Code!");
-  const [promoApplied, setPromoApplied] = useState('')
+  const [promoApplied, setPromoApplied] = useState("");
+  const [userName, setUserName] = useState("");
 
   // addtocart function
   const handleAddToCart = (product) => {
@@ -65,23 +69,33 @@ function App() {
   };
 
   //promo code functions
-
   const applyPromoCode = () => {
     if (promoCode === "DISCOUNT10") {
       setDiscount(getTotalPrice() * 0.1);
       setPromoCode("");
-      setInvalidCode("")
-      setPromoApplied('Code Applied Successfully !!')
+      setInvalidCode("");
+      setPromoApplied("Code Applied Successfully !!");
     } else {
       setInvalidCode(invalidCode);
     }
   };
 
+  //display username
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserName(user.displayName);
+      } else {
+        setUserName("");
+      }
+    });
+  }, [userName]);
+
   return (
     <>
       <div>
         <BrowserRouter>
-          <Navbar cartData={cartData} />
+          <Navbar cartData={cartData} userName={userName} />
           <Routes>
             <Route exact path="/" element={<Home />} />
             <Route
@@ -110,6 +124,7 @@ function App() {
             <Route exact path="/login" element={<Login />} />
             <Route exact path="/signup" element={<SignUp />} />
           </Routes>
+          <Toaster />
           <Footer />
         </BrowserRouter>
       </div>
